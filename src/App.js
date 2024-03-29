@@ -9,6 +9,7 @@ function App() {
   const [quotes, setQuotes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [category, setCategory] = useState("All");
+  const [favoriteQuotes, setFavoriteQuotes] = useState([]);
 
   const quotesUrl =
     "https://gist.githubusercontent.com/skillcrush-curriculum/6365d193df80174943f6664c7c6dbadf/raw/1f1e06df2f4fc3c2ef4c30a3a4010149f270c0e0/quotes.js";
@@ -21,6 +22,7 @@ function App() {
     "Success",
     "Empowerment",
   ];
+  const maxFaves = 3;
 
   const fetchQuotes = async () => {
     try {
@@ -48,9 +50,41 @@ function App() {
       ? quotes.filter((quote) => quote.categories.includes(category))
       : quotes;
 
+  const addToFavorites = (quoteId) => {
+    const selectedQuote = quotes.find((quote) => quote.id === quoteId);
+    const alreadyFavorite = favoriteQuotes.find(
+      (favorite) => favorite.id === selectedQuote.id
+    );
+
+    if (alreadyFavorite) {
+      console.log("You already favorited this quote!");
+    } else if (favoriteQuotes.length < maxFaves) {
+      setFavoriteQuotes([...favoriteQuotes, selectedQuote]);
+      console.log("Added to favorites");
+    } else {
+      console.log(
+        "Max number of quotes reached. Please delete one to add a new one."
+      );
+    }
+  };
+
   return (
     <div className="App">
       <Header />
+      <section className="favorite-quotes">
+        <div className="wrapper quotes">
+          <h3>Top 3 Favorite Quotes</h3>
+          {favoriteQuotes.length > 0 && JSON.stringify(favoriteQuotes)}
+        </div>
+        <div className="favorite-quotes-description">
+          <p>
+            You can add up to three favorites by selecting from the options
+            below.
+            <br />
+            Once you choose, they will appear here.
+          </p>
+        </div>
+      </section>
       <main>
         {loading === true && <Loader />}
         <Quotes
@@ -59,6 +93,7 @@ function App() {
           category={category}
           handleCategoryChange={handleCategoryChange}
           filteredQuotes={filteredQuotes}
+          addToFavorites={addToFavorites}
         />
       </main>
       <Footer />
