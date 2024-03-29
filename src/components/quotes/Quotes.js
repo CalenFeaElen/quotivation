@@ -15,7 +15,12 @@ const Quotes = ({
       <div className="quotes wrapper">
         <div className="category-header">
           <h2>Pick Your Favorite Quotes Below</h2>
-          <p>Browse through your collection of quotes</p>
+          <p>
+            {category === "All" &&
+              `You have ${filteredQuotes.length} great quotes!`}
+            {category != "All" &&
+              `You have a collection of ${filteredQuotes.length} great ${category} quotes!`}
+          </p>
           <CategoryForm
             categories={categories}
             category={category}
@@ -30,7 +35,6 @@ const Quotes = ({
             favoriteQuotes={favoriteQuotes}
           />
         ))}
-        ;
       </div>
     </section>
   );
